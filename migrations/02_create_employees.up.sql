@@ -10,8 +10,6 @@ INSERT INTO employees (ename, workday) VALUES
 ('Abduholiqov Javohir Bahodir o‘g‘li', '2024-07-11' ),
 ('Fattoyev Yusufjon Qahramon o‘g‘li',  '2024-06-11' ),
 ('Xasilov Muxammad-Amin Maxmud o‘g‘li','2024-06-12' ),
-('Fattoyev Yusufjon Qahramon o‘g‘li',  '2024-07-12' ),
-('Xasilov Muxammad-Amin Maxmud o‘g‘li','2024-07-15' ),
 ('Temirov Shukrullo Salohiddin o‘g‘li','2024-06-13' ),
 ('Teshayev Shuhrat Nusratovich',       '2024-06-14' ),
 ('Obloberdiyev Abrorjon Botir o‘g‘li', '2024-06-17' ), 

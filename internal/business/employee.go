@@ -38,7 +38,7 @@ func (s *EmployeeService) SendDailyDutyNotification(bot *tgbotapi.BotAPI) {
 
 	c := cron.New()
 
-	_, err := c.AddFunc("10 6 * * MON-FRI", func() {
+	_, err := c.AddFunc("25 4 * * MON-FRI", func() {
 		groupId, err := s.RetrievingGroupID()
 		if err != nil {
 			fmt.Printf("error during receiving groupid on api %v", err)
@@ -65,7 +65,7 @@ func (s *EmployeeService) SendDailyDutyNotification(bot *tgbotapi.BotAPI) {
 		log.Fatalf("Failed to add cron job: %v", err)
 	}
 
-	_, err = c.AddFunc("11 6 * * MON-FRI", func() {
+	_, err = c.AddFunc("35 8 * * MON-FRI", func() {
 		groupId, err := s.RetrievingGroupID()
 		if err != nil {
 			fmt.Printf("error during retrieving group ID: %v\n", err)

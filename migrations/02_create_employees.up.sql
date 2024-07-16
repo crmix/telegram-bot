@@ -1,6 +1,6 @@
 INSERT INTO employees (ename, workday) VALUES
-('Sayfullayev Otabek Salimovich',      '2023-07-01' ),
-('Turobov Akbar Tolib o''g''li',       '2023-07-02' ),
+('Sayfullayev Otabek Salimovich',      '2024-07-01' ),
+('Turobov Akbar Tolib o''g''li',       '2024-07-02' ),
 ('Ashrapov Elyor Avazxonovich',        '2024-07-03' ),
 ('Axmedov Anzar Akmalovich',           '2024-07-04' ),
 ('Axmatov Shoxrux Shuxrat o‘g‘li',     '2024-07-05' ),

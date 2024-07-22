@@ -11,7 +11,6 @@ type Config struct {
 	TelegramBotToken string
 	AllowedUsersId []string
 	AuthorizedUserID string
-
 }
 
 func LoadConfig() (*Config, error) {

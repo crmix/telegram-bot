@@ -38,7 +38,7 @@ func (s *EmployeeService) SendDailyDutyNotification(bot *tgbotapi.BotAPI) {
 
 	c := cron.New()
 
-	_, err := c.AddFunc("25 4 * * MON-FRI", func() {
+	_, err := c.AddFunc("20 4 * * MON-FRI", func() {
 		groupId, err := s.RetrievingGroupID()
 		if err != nil {
 			fmt.Printf("error during receiving groupid on api %v", err)
@@ -52,9 +52,9 @@ func (s *EmployeeService) SendDailyDutyNotification(bot *tgbotapi.BotAPI) {
 			log.Printf("Failed to get and update duty employee: %v", err)
 			return
 		}
-
-		remainderMsg := fmt.Sprintf("Xayrli tong! Bizning bugungi navbatchimiz: %s", employee.Name)
+		remainderMsg := fmt.Sprintf("Xayrli tong! Bizning bugungi navbatchimiz: <b>%s</b>", employee.Name)
 		msg := tgbotapi.NewMessage(groupId, remainderMsg)
+		msg.ParseMode = "HTML"
 		_, err = bot.Send(msg)
 		if err != nil {
 			log.Printf("Failed to send reminder msg: %s", err)
@@ -65,7 +65,7 @@ func (s *EmployeeService) SendDailyDutyNotification(bot *tgbotapi.BotAPI) {
 		log.Fatalf("Failed to add cron job: %v", err)
 	}
 
-	_, err = c.AddFunc("35 8 * * MON-FRI", func() {
+	_, err = c.AddFunc("20 9 * * MON-FRI", func() {
 		groupId, err := s.RetrievingGroupID()
 		if err != nil {
 			fmt.Printf("error during retrieving group ID: %v\n", err)
@@ -76,8 +76,9 @@ func (s *EmployeeService) SendDailyDutyNotification(bot *tgbotapi.BotAPI) {
 			log.Printf("Failed to get and update duty employee: %v", err)
 			return
 		}
-		resultsMsg := fmt.Sprintf("%s, Umid qilamanki bugungi navbatchiligingizni bajardingiz", employee.Name)
+		resultsMsg := fmt.Sprintf("*%s*, Umid qilamanki bugungi navbatchiligingizni bajardingiz", employee.Name)
 		msg := tgbotapi.NewMessage(groupId, resultsMsg)
+		msg.ParseMode = "MarkdownV2"
 		_, err = bot.Send(msg)
 		if err != nil {
 			log.Printf("Failed to send results message: %v", err)
@@ -91,3 +92,4 @@ func (s *EmployeeService) SendDailyDutyNotification(bot *tgbotapi.BotAPI) {
 
 	select {}
 }
+

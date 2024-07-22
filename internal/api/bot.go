@@ -17,8 +17,8 @@ type Bot struct {
 	GroupChatID       int64
 }
 
-// var cfg *config.Config
 var AllowedUsers map[int64]bool
+var AuthorizedUserID int64
 
 func init() {
 	var err error
@@ -26,6 +26,12 @@ func init() {
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
 	}
+ 
+	AuthorizedUserID, err = strconv.ParseInt(conf.AuthorizedUserID, 10, 64)
+		if err !=nil{
+           log.Printf("error during strconv string into int64 %v", err)
+		}
+	
 
 	AllowedUsers = make(map[int64]bool)
 	for _, idStr := range conf.AllowedUsersId {
@@ -54,6 +60,10 @@ func StartBot(bot *tgbotapi.BotAPI, updates tgbotapi.UpdatesChannel, employeeSer
 		}
 
 		if update.Message != nil {
+			userID := update.Message.From.ID
+			if userID ==AuthorizedUserID{
+				forwardMessage(*b, bot, update.Message)
+			}
 			b.handleMessage(update.Message)
 		}
 
@@ -62,6 +72,42 @@ func StartBot(bot *tgbotapi.BotAPI, updates tgbotapi.UpdatesChannel, employeeSer
 		}
 
 	}
+}
+
+func forwardMessage(b Bot, bot *tgbotapi.BotAPI, message *tgbotapi.Message) {
+	  groupChatID, err := b.employeeService.RetrievingGroupID()
+		if err != nil{
+            log.Printf("error during forwardMessage %v", err)
+		}
+
+    if message.Text != "" {
+        msg := tgbotapi.NewMessage(groupChatID, message.Text)
+        _, err := bot.Send(msg)
+        if err != nil {
+            log.Printf("Failed to forward text message: %v", err)
+        }
+    } else if message.Photo != nil {
+        photo := message.Photo[len(message.Photo)-1]
+        msg := tgbotapi.NewPhoto(groupChatID, tgbotapi.FileID(photo.FileID))
+        _, err := bot.Send(msg)
+        if err != nil {
+            log.Printf("Failed to forward photo message: %v", err)
+        }
+    } else if message.Document != nil {
+        doc := tgbotapi.NewDocument(groupChatID, tgbotapi.FileID(message.Document.FileID))
+        _, err := bot.Send(doc)
+        if err != nil {
+            log.Printf("Failed to forward document message: %v", err)
+        }
+    } else if message.Video != nil {
+        video := tgbotapi.NewVideo(groupChatID, tgbotapi.FileID(message.Video.FileID))
+        _, err := bot.Send(video)
+        if err != nil {
+            log.Printf("Failed to forward video message: %v", err)
+        }
+    } else {
+        log.Printf("Unhandled message type from authorized user: %v", message)
+    }	
 }
 
 func (b *Bot) handleMyChatMember(chatMember *tgbotapi.ChatMemberUpdated) {

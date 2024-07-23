@@ -14,7 +14,7 @@ INSERT INTO employees (ename, workday) VALUES
 ('Teshayev Shuhrat Nusratovich',       '2024-07-17' ),
 ('Obloberdiyev Abrorjon Botir o‘g‘li', '2024-07-18' ), 
 ('Ismoilov Farrux Akbar o‘g‘li',       '2024-07-19' ),
-('Muxtorov Alisher Muxtorovich',       '2024-06-20' ),
+('Muxtorov Alisher Muxtorovich',       '2024-07-23' ),
 ('Samiyev Muhammadali Sulton o‘g‘li',  '2024-07-22' ),
 ('Akramov Abdulaziz Azim o‘g‘li',      '2024-06-21' ),
 ('Timur',                              '2024-06-24' ),

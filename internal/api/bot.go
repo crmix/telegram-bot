@@ -3,7 +3,6 @@ package api
 import (
 	"fmt"
 	"log"
-	"strconv"
 	"telegram-bot/config"
 	"telegram-bot/internal/business"
 
@@ -18,7 +17,7 @@ type Bot struct {
 }
 
 var AllowedUsers map[int64]bool
-var AuthorizedUserID int64
+var Id1, Id2, Id3 int64
 
 func init() {
 	var err error
@@ -26,22 +25,11 @@ func init() {
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
 	}
- 
-	AuthorizedUserID, err = strconv.ParseInt(conf.AuthorizedUserID, 10, 64)
-		if err !=nil{
-           log.Printf("error during strconv string into int64 %v", err)
-		}
-	
 
-	AllowedUsers = make(map[int64]bool)
-	for _, idStr := range conf.AllowedUsersId {
-		id, err := strconv.ParseInt(idStr, 10, 64)
-		if err != nil {
-			log.Printf("Invalid user ID: %v", idStr)
-			continue
-		}
-		AllowedUsers[id] = true
-	}
+	Id1 = conf.OtabekAkaID
+	Id2 = conf.ElyorAkaID
+	Id3 = conf.FarruxAkaID
+
 }
 
 func StartBot(bot *tgbotapi.BotAPI, updates tgbotapi.UpdatesChannel, employeeService *business.EmployeeService, validationService *business.ValidationService, groupChatID int64) {
@@ -61,7 +49,7 @@ func StartBot(bot *tgbotapi.BotAPI, updates tgbotapi.UpdatesChannel, employeeSer
 
 		if update.Message != nil {
 			userID := update.Message.From.ID
-			if userID ==AuthorizedUserID{
+			if userID == Id1 || userID == Id2 || userID == Id3 && !update.Message.IsCommand() {
 				forwardMessage(*b, bot, update.Message)
 			}
 			b.handleMessage(update.Message)
@@ -75,39 +63,39 @@ func StartBot(bot *tgbotapi.BotAPI, updates tgbotapi.UpdatesChannel, employeeSer
 }
 
 func forwardMessage(b Bot, bot *tgbotapi.BotAPI, message *tgbotapi.Message) {
-	  groupChatID, err := b.employeeService.RetrievingGroupID()
-		if err != nil{
-            log.Printf("error during forwardMessage %v", err)
-		}
+	groupChatID, err := b.employeeService.RetrievingGroupID()
+	if err != nil {
+		log.Printf("error during forwardMessage %v", err)
+	}
 
-    if message.Text != "" {
-        msg := tgbotapi.NewMessage(groupChatID, message.Text)
-        _, err := bot.Send(msg)
-        if err != nil {
-            log.Printf("Failed to forward text message: %v", err)
-        }
-    } else if message.Photo != nil {
-        photo := message.Photo[len(message.Photo)-1]
-        msg := tgbotapi.NewPhoto(groupChatID, tgbotapi.FileID(photo.FileID))
-        _, err := bot.Send(msg)
-        if err != nil {
-            log.Printf("Failed to forward photo message: %v", err)
-        }
-    } else if message.Document != nil {
-        doc := tgbotapi.NewDocument(groupChatID, tgbotapi.FileID(message.Document.FileID))
-        _, err := bot.Send(doc)
-        if err != nil {
-            log.Printf("Failed to forward document message: %v", err)
-        }
-    } else if message.Video != nil {
-        video := tgbotapi.NewVideo(groupChatID, tgbotapi.FileID(message.Video.FileID))
-        _, err := bot.Send(video)
-        if err != nil {
-            log.Printf("Failed to forward video message: %v", err)
-        }
-    } else {
-        log.Printf("Unhandled message type from authorized user: %v", message)
-    }	
+	if message.Text != "" {
+		msg := tgbotapi.NewMessage(groupChatID, message.Text)
+		_, err := bot.Send(msg)
+		if err != nil {
+			log.Printf("Failed to forward text message: %v", err)
+		}
+	} else if message.Photo != nil {
+		photo := message.Photo[len(message.Photo)-1]
+		msg := tgbotapi.NewPhoto(groupChatID, tgbotapi.FileID(photo.FileID))
+		_, err := bot.Send(msg)
+		if err != nil {
+			log.Printf("Failed to forward photo message: %v", err)
+		}
+	} else if message.Document != nil {
+		doc := tgbotapi.NewDocument(groupChatID, tgbotapi.FileID(message.Document.FileID))
+		_, err := bot.Send(doc)
+		if err != nil {
+			log.Printf("Failed to forward document message: %v", err)
+		}
+	} else if message.Video != nil {
+		video := tgbotapi.NewVideo(groupChatID, tgbotapi.FileID(message.Video.FileID))
+		_, err := bot.Send(video)
+		if err != nil {
+			log.Printf("Failed to forward video message: %v", err)
+		}
+	} else {
+		log.Printf("Unhandled message type from authorized user: %v", message)
+	}
 }
 
 func (b *Bot) handleMyChatMember(chatMember *tgbotapi.ChatMemberUpdated) {
@@ -136,7 +124,8 @@ func (b *Bot) handleMessage(message *tgbotapi.Message) {
 		case "restart":
 			b.handleRestart()
 		case "next":
-			if _, ok := AllowedUsers[message.From.ID]; ok {
+			userId := message.From.ID
+			if userId == Id1 || userId == Id2 || userId == Id3 {
 				b.handleNextCommand()
 			} else {
 				b.bot.Send(tgbotapi.NewMessage(message.Chat.ID, "Sizga bu buyruqni amalga oshirishga ruxsat berilmagan"))

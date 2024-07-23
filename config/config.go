@@ -3,33 +3,45 @@ package config
 import (
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/joho/godotenv"
 )
 
 type Config struct {
 	TelegramBotToken string
-	AllowedUsersId []string
-	AuthorizedUserID string
+	OtabekAkaID      int64
+	ElyorAkaID       int64
+	FarruxAkaID      int64
 }
 
 func LoadConfig() (*Config, error) {
-    err := godotenv.Load(".env")
-	if err != nil{
+	err := godotenv.Load(".env")
+	if err != nil {
 		log.Fatalf("Error loading .env file on main")
 	}
-	
+
 	tgToken := os.Getenv("TELEGRAM_BOT_TOKEN")
-	allowedIds := []string{
-		os.Getenv("AllowedId1"),
-		os.Getenv("AllowedId2"),
-		os.Getenv("AllowedId3"),
+	
+	otabekakaid, err :=strconv.ParseInt(os.Getenv("OtabekAkaId"), 10, 64)
+	if err!=nil{
+		log.Printf("error during converting type in config file1")
 	}
-	authorisedId :=os.Getenv("AuthorisedUser")
-		
+	
+	elyorakaid, err :=strconv.ParseInt(os.Getenv("ElyorAkaId"), 10, 64)
+	if err!=nil{
+		log.Printf("error during converting type in config file2")
+	}
+	
+	farruxakaid, err :=strconv.ParseInt(os.Getenv("FarruxAkaId"), 10, 64)
+	if err!=nil{
+		log.Printf("error during converting type in config file3")
+	}
+
 	return &Config{
 		TelegramBotToken: tgToken,
-		AllowedUsersId: allowedIds,
-		AuthorizedUserID: authorisedId,
+		OtabekAkaID: otabekakaid,
+		ElyorAkaID: elyorakaid,
+		FarruxAkaID: farruxakaid,
 	}, nil
 }

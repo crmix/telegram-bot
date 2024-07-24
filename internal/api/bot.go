@@ -50,7 +50,6 @@ func StartBot(bot *tgbotapi.BotAPI, updates tgbotapi.UpdatesChannel, employeeSer
 		if update.Message != nil {
 			userID := update.Message.From.ID
 			chatId :=update.Message.Chat.ID
-			fmt.Println(userID, chatId, bot.Self.ID)
 			if (userID == Id1 || userID == Id2 || userID == Id3) && (chatId==Id1 || chatId==Id2 || chatId==Id3 )&& !update.Message.IsCommand() {
 				forwardMessage(*b, bot, update.Message)
 			}

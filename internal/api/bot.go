@@ -49,8 +49,9 @@ func StartBot(bot *tgbotapi.BotAPI, updates tgbotapi.UpdatesChannel, employeeSer
 
 		if update.Message != nil {
 			userID := update.Message.From.ID
-			chatID :=update.Message.Chat.ID
-			if (userID == Id1 || userID == Id2 || userID == Id3)&& chatID==bot.Self.ID && !update.Message.IsCommand() {
+			chatId :=update.Message.Chat.ID
+			fmt.Println(userID, chatId, bot.Self.ID)
+			if (userID == Id1 || userID == Id2 || userID == Id3) && (chatId==Id1 || chatId==Id2 || chatId==Id3 )&& !update.Message.IsCommand() {
 				forwardMessage(*b, bot, update.Message)
 			}
 			b.handleMessage(update.Message)
@@ -177,7 +178,6 @@ func (b *Bot) handlePrevCommand(){
 		log.Printf("Failed to send next msg %v", err)
 	}
 }
-
 
 func (b *Bot) handleStartCommand(message *tgbotapi.Message) {
 	msg := tgbotapi.NewMessage(message.Chat.ID, "Xush kelibsiz! Men navbatchilikni eslatib turish uchun yaratilgan botman:) Savollar bo'lsa @FeruzIsmoilov567")

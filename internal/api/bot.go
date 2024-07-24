@@ -34,7 +34,7 @@ func init() {
 
 func StartBot(bot *tgbotapi.BotAPI, updates tgbotapi.UpdatesChannel, employeeService *business.EmployeeService, validationService *business.ValidationService, groupChatID int64) {
 
-	bot.Debug = true
+	bot.Debug = false
 	b := &Bot{
 		bot:               bot,
 		employeeService:   employeeService,
@@ -49,7 +49,7 @@ func StartBot(bot *tgbotapi.BotAPI, updates tgbotapi.UpdatesChannel, employeeSer
 
 		if update.Message != nil {
 			userID := update.Message.From.ID
-			if userID == Id1 || userID == Id2 || userID == Id3 && !update.Message.IsCommand() {
+			if (userID == Id1 || userID == Id2 || userID == Id3) && !update.Message.IsCommand() {
 				forwardMessage(*b, bot, update.Message)
 			}
 			b.handleMessage(update.Message)

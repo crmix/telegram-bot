@@ -21,7 +21,7 @@ func LoadConfig() (*Config, error) {
 		log.Fatalf("Error loading .env file on main")
 	}
 
-	tgToken := os.Getenv("TEST_TELEGRAM_BOT_TOKEN")
+	tgToken := os.Getenv("TELEGRAM_BOT_TOKEN")
 	
 	otabekakaid, err :=strconv.ParseInt(os.Getenv("OtabekAkaId"), 10, 64)
 	if err!=nil{

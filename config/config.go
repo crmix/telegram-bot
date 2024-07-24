@@ -14,14 +14,21 @@ type Config struct {
 	ElyorAkaID       int64
 	FarruxAkaID      int64
 }
-
+ 
 func LoadConfig() (*Config, error) {
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatalf("Error loading .env file on main")
 	}
+     
+	var tgToken string
+	if os.Getenv("ENVIRONMENT")=="dev"{
+		tgToken = os.Getenv("TEST_TELEGRAM_BOT_TOKEN")
+	} else if os.Getenv("ENVIROMENT")=="prod"{
+		tgToken = os.Getenv("TELEGRAM_BOT_TOKEN")
+	}
 
-	tgToken := os.Getenv("TELEGRAM_BOT_TOKEN")
+
 	
 	otabekakaid, err :=strconv.ParseInt(os.Getenv("OtabekAkaId"), 10, 64)
 	if err!=nil{

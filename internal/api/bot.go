@@ -117,12 +117,19 @@ func (b *Bot) handleMessage(message *tgbotapi.Message) {
 		switch message.Command() {
 		case "start":
 			b.handleStartCommand(message)
-		case "validatephone":
-			b.handleValidatePhoneCommand(message)
+		//case "validatephone":
+		//	b.handleValidatePhoneCommand(message)
 		case "tags":
 			b.handleTagsCommand(message)
 		case "restart":
 			b.handleRestart()
+		case "prev":
+			userId := message.From.ID
+			if userId == Id1 || userId == Id2 || userId == Id3 {
+				b.handlePrevCommand()
+			}else {
+				b.bot.Send(tgbotapi.NewMessage(message.Chat.ID, "Sizga bu buyruqni amalga oshirishga ruxsat berilmagan"))
+			}
 		case "next":
 			userId := message.From.ID
 			if userId == Id1 || userId == Id2 || userId == Id3 {
@@ -153,8 +160,26 @@ func (b *Bot) handleNextCommand() {
 	}
 }
 
+func (b *Bot) handlePrevCommand(){
+	groupId, err :=b.employeeService.RetrievingGroupID()
+	if err!=nil {
+		log.Printf("failed to get groupid for next tag %v", err)
+	}
+	prevEmployee, err :=b.employeeService.GetPrevEmployee()
+	if err!= nil{
+		log.Printf("failed to get nextEmployee for prev tag %v", err)
+	}
+	chat := fmt.Sprintf("Demak bugun navbatchilikni %s qiladilar", prevEmployee)
+	msg := tgbotapi.NewMessage(groupId, chat)
+	_, err = b.bot.Send(msg)
+	if err != nil {
+		log.Printf("Failed to send next msg %v", err)
+	}
+}
+
+
 func (b *Bot) handleStartCommand(message *tgbotapi.Message) {
-	msg := tgbotapi.NewMessage(message.Chat.ID, "Xush kelibsiz! /validatephone kamandasidan foydalanib raqamingizni validatsiya qiling.")
+	msg := tgbotapi.NewMessage(message.Chat.ID, "Xush kelibsiz! Men navbatchilikni eslatib turish uchun yaratilgan botman:) Savollar bo'lsa @FeruzIsmoilov567")
 	_, err := b.bot.Send(msg)
 	if err != nil {
 		log.Printf("Failed to send start msg %v", err)

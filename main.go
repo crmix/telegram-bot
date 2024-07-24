@@ -45,7 +45,6 @@ func main() {
 
 	go api.StartBot(bot, updates, employeeService, validationService, 0)
 
-	fmt.Println("crondan o'tdi")
 	employeeService.SendDailyDutyNotification(bot)
 
 }

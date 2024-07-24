@@ -26,6 +26,10 @@ func (s *EmployeeService) GetNextEmployee() (string, error) {
 	return s.repo.GetNextDutyEmployee()
 }
 
+func (s *EmployeeService) GetPrevEmployee() (string, error){
+	return s.repo.GetPreviousDutyEmployee()
+}
+
 func (s *EmployeeService) RetrievingGroupID() (int64, error) {
 	return s.repo.GettingGroupsId()
 }

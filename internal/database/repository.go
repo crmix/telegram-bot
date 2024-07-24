@@ -108,3 +108,39 @@ SELECT ename FROM update_next_employee;
 
 	return employee.Name, nil
 }
+
+func (r *Repository) GetPreviousDutyEmployee() (string, error) {
+	query := `
+	WITH today_employee AS (
+    SELECT id, ename, workday
+    FROM employees
+    WHERE workday = CURRENT_DATE
+    LIMIT 1
+),
+previous_employee AS (
+    SELECT id, ename, workday
+    FROM employees
+    WHERE id = (SELECT id FROM today_employee) - 1
+),
+update_today_employee AS (
+    UPDATE employees
+    SET workday = (SELECT workday FROM previous_employee)
+    WHERE id = (SELECT id FROM today_employee)
+    RETURNING id, ename, workday
+),
+update_previous_employee AS (
+    UPDATE employees
+    SET workday = CURRENT_DATE
+    WHERE id = (SELECT id FROM previous_employee)
+    RETURNING id, ename, workday
+)
+SELECT ename FROM update_previous_employee;
+	`
+	row := r.db.QueryRow(query)
+	var employee Employee
+	err := row.Scan(&employee.Name)
+	if err != nil {
+		return employee.Name, fmt.Errorf("error fetching previous duty employee: %v", err)
+	}
+	return employee.Name, nil
+}

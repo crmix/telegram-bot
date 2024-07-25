@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
+	"telegram-bot/config"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -25,16 +25,12 @@ func NewDbConn() (*DBConn, error) {
 		log.Fatalf("Error loading .env file")
 	}
 
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
+	psql, err := config.LoadConfig()
+	if err!=nil{
+		log.Printf("did not come psql info from config")
+	}
 
-	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		dbHost, dbPort, dbUser, dbPassword, dbName)
-
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", psql.PsqlInfo)
 	if err != nil {
 		panic(err)
 	}

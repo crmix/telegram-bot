@@ -4,9 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
+	"telegram-bot/config"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -20,27 +19,12 @@ type DBConn struct {
 
 func NewDbConn() (*DBConn, error) {
 
-	err := godotenv.Load(".env")
+	psql, err := config.LoadConfig()
 	if err != nil {
-		log.Fatalf("Error loading .env file")
+		log.Printf("did not come psql info from config")
 	}
 
-	err = godotenv.Load(".env")
-	if err != nil {
-		log.Println("error loading env file on config package")
-	}
-
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
-
-	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		dbHost, dbPort, dbUser, dbPassword, dbName)
-	
-
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", psql.PsqlInfo)
 	if err != nil {
 		panic(err)
 	}

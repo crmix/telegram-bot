@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 	"strconv"
-
 	//"github.com/joho/godotenv"
 )
 
@@ -16,7 +15,7 @@ type Config struct {
 }
 
 func LoadConfig() (*Config, error) {
-	
+
 	var tgToken string
 	if os.Getenv("ENVIRONMENT") == "dev" {
 		tgToken = os.Getenv("TEST_TELEGRAM_BOT_TOKEN")

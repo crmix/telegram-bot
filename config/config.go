@@ -35,7 +35,7 @@ func LoadConfig() (*Config, error) {
 	var tgToken string
 	if os.Getenv("ENVIRONMENT") == "dev" {
 		tgToken = os.Getenv("TEST_TELEGRAM_BOT_TOKEN")
-	} else if os.Getenv("ENVIROMENT") == "prod" {
+	} else if os.Getenv("ENVIRONMENT") == "prod" {
 		tgToken = os.Getenv("TELEGRAM_BOT_TOKEN")
 	}
 

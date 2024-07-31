@@ -79,10 +79,19 @@ func (r *Repository) GetNextDutyEmployee() (string, error) {
     WHERE workday = CURRENT_DATE
     LIMIT 1
 ),
+numbered_employees AS (
+    SELECT id, ename, workday, 
+           ROW_NUMBER() OVER (ORDER BY id) as row_num
+    FROM employees
+),
 next_employee AS (
     SELECT id, ename, workday
-    FROM employees
-    WHERE id = (SELECT id FROM today_employee) + 1
+    FROM numbered_employees
+    WHERE row_num = (
+        SELECT (row_num % (SELECT COUNT(*) FROM employees) + 1)
+        FROM numbered_employees
+        WHERE id = (SELECT id FROM today_employee)
+    )
 ),
 update_today_employee AS (
     UPDATE employees
@@ -97,6 +106,7 @@ update_next_employee AS (
     RETURNING id, ename, workday
 )
 SELECT ename FROM update_next_employee;
+
     `
 	row := r.db.QueryRow(query)
 
@@ -111,30 +121,42 @@ SELECT ename FROM update_next_employee;
 
 func (r *Repository) GetPreviousDutyEmployee() (string, error) {
 	query := `
-	WITH today_employee AS (
+WITH today_employee AS (
     SELECT id, ename, workday
     FROM employees
     WHERE workday = CURRENT_DATE
     LIMIT 1
 ),
-previous_employee AS (
-    SELECT id, ename, workday
+numbered_employees AS (
+    SELECT id, ename, workday, 
+           ROW_NUMBER() OVER (ORDER BY id) as row_num
     FROM employees
-    WHERE id = (SELECT id FROM today_employee) - 1
+),
+prev_employee AS (
+    SELECT id, ename, workday
+    FROM numbered_employees
+    WHERE row_num = (
+        CASE
+            WHEN (SELECT row_num FROM numbered_employees WHERE id = (SELECT id FROM today_employee)) = 1 
+            THEN (SELECT COUNT(*) FROM employees)
+            ELSE (SELECT row_num - 1 FROM numbered_employees WHERE id = (SELECT id FROM today_employee))
+        END
+    )
 ),
 update_today_employee AS (
     UPDATE employees
-    SET workday = (SELECT workday FROM previous_employee)
+    SET workday = (SELECT workday FROM prev_employee)
     WHERE id = (SELECT id FROM today_employee)
     RETURNING id, ename, workday
 ),
-update_previous_employee AS (
+update_prev_employee AS (
     UPDATE employees
     SET workday = CURRENT_DATE
-    WHERE id = (SELECT id FROM previous_employee)
+    WHERE id = (SELECT id FROM prev_employee)
     RETURNING id, ename, workday
 )
-SELECT ename FROM update_previous_employee;
+SELECT ename FROM update_prev_employee;
+
 	`
 	row := r.db.QueryRow(query)
 	var employee Employee

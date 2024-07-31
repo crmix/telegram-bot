@@ -29,7 +29,6 @@ func init() {
 	Id1 = conf.OtabekAkaID
 	Id2 = conf.ElyorAkaID
 	Id3 = conf.FarruxAkaID
-
 }
 
 func StartBot(bot *tgbotapi.BotAPI, updates tgbotapi.UpdatesChannel, employeeService *business.EmployeeService, validationService *business.ValidationService, groupChatID int64) {
@@ -49,8 +48,8 @@ func StartBot(bot *tgbotapi.BotAPI, updates tgbotapi.UpdatesChannel, employeeSer
 
 		if update.Message != nil {
 			userID := update.Message.From.ID
-			chatId :=update.Message.Chat.ID
-			if (userID == Id1 || userID == Id2 || userID == Id3) && (chatId==Id1 || chatId==Id2 || chatId==Id3 )&& !update.Message.IsCommand() {
+			chatId := update.Message.Chat.ID
+			if (userID == Id1 || userID == Id2 || userID == Id3) && (chatId == Id1 || chatId == Id2 || chatId == Id3) && !update.Message.IsCommand() {
 				forwardMessage(*b, bot, update.Message)
 			}
 			b.handleMessage(update.Message)
@@ -128,7 +127,7 @@ func (b *Bot) handleMessage(message *tgbotapi.Message) {
 			userId := message.From.ID
 			if userId == Id1 || userId == Id2 || userId == Id3 {
 				b.handlePrevCommand()
-			}else {
+			} else {
 				b.bot.Send(tgbotapi.NewMessage(message.Chat.ID, "Sizga bu buyruqni amalga oshirishga ruxsat berilmagan"))
 			}
 		case "next":
@@ -153,25 +152,27 @@ func (b *Bot) handleNextCommand() {
 	if err != nil {
 		log.Printf("failed to get nextEmployee for next tag %v", err)
 	}
-	chat := fmt.Sprintf("Demak bugun navbatchilikni %s qiladilar", nextEmployee)
+	chat := fmt.Sprintf("Demak bugun navbatchilikni <b>%s</b> qiladilar", nextEmployee)
 	msg := tgbotapi.NewMessage(groupid, chat)
+	msg.ParseMode = "HTML"
 	_, err = b.bot.Send(msg)
 	if err != nil {
 		log.Printf("Failed to send next msg %v", err)
 	}
 }
 
-func (b *Bot) handlePrevCommand(){
-	groupId, err :=b.employeeService.RetrievingGroupID()
-	if err!=nil {
+func (b *Bot) handlePrevCommand() {
+	groupId, err := b.employeeService.RetrievingGroupID()
+	if err != nil {
 		log.Printf("failed to get groupid for next tag %v", err)
 	}
-	prevEmployee, err :=b.employeeService.GetPrevEmployee()
-	if err!= nil{
+	prevEmployee, err := b.employeeService.GetPrevEmployee()
+	if err != nil {
 		log.Printf("failed to get nextEmployee for prev tag %v", err)
 	}
-	chat := fmt.Sprintf("Demak bugun navbatchilikni %s qiladilar", prevEmployee)
+	chat := fmt.Sprintf("Demak bugun navbatchilikni <b>%s</b> qiladilar", prevEmployee)
 	msg := tgbotapi.NewMessage(groupId, chat)
+	msg.ParseMode = "HTML"
 	_, err = b.bot.Send(msg)
 	if err != nil {
 		log.Printf("Failed to send next msg %v", err)
@@ -220,8 +221,9 @@ func (b *Bot) handleRestart() {
 		return
 	}
 
-	reminderMsg := fmt.Sprintf("Bugungi navbatchimiz: %s edi.", employee.Name)
+	reminderMsg := fmt.Sprintf("Bugungi navbatchimiz: <b>%s</b> edi.", employee.Name)
 	msg = tgbotapi.NewMessage(chatID, reminderMsg)
+	msg.ParseMode = "HTML"
 	_, err = b.bot.Send(msg)
 	if err != nil {
 		log.Printf("Failed to send restart remainder message: %v", err)

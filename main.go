@@ -23,10 +23,7 @@ func main() {
 	if err != nil {
 		log.Println(err)
 	}
-
-	fmt.Println("///////////////////////////////////////////")
 	log.Printf("Authorized on account %s", bot.Self.UserName)
-	fmt.Println("///////////////////////////////////////////")
 
 	updateConfig := tgbotapi.NewUpdate(0)
 	updateConfig.Timeout = 60

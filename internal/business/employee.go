@@ -42,7 +42,7 @@ func (s *EmployeeService) SendDailyDutyNotification(bot *tgbotapi.BotAPI) {
 
 	c := cron.New()
 
-	_, err := c.AddFunc("20 4 * * MON-FRI", func() {
+	_, err := c.AddFunc("* 4 * * MON-FRI", func() {
 		groupId, err := s.RetrievingGroupID()
 		if err != nil {
 			fmt.Printf("error during receiving groupid on api %v", err)
@@ -80,9 +80,9 @@ func (s *EmployeeService) SendDailyDutyNotification(bot *tgbotapi.BotAPI) {
 			log.Printf("Failed to get and update duty employee: %v", err)
 			return
 		}
-		resultsMsg := fmt.Sprintf("*%s*, Umid qilamanki bugungi navbatchiligingizni bajardingiz", employee.Name)
+		resultsMsg := fmt.Sprintf("<b>%s</b>, Umid qilamanki bugungi navbatchiligingizni bajardingiz", employee.Name)
 		msg := tgbotapi.NewMessage(groupId, resultsMsg)
-		msg.ParseMode = "MarkdownV2"
+		msg.ParseMode = "HTML"
 		_, err = bot.Send(msg)
 		if err != nil {
 			log.Printf("Failed to send results message: %v", err)

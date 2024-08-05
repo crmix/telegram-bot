@@ -1,7 +1,7 @@
 INSERT INTO employees (ename, workday) VALUES
-('Sayfullayev Otabek Salimovich',      '2024-07-01' ),
-('Turobov Akbar Tolib o''g''li',       '2024-07-02' ),
-('Ashrapov Elyor Avazxonovich',        '2024-07-03' ),
+('Sayfullayev Otabek Salimovich',      '2024-08-03' ),
+('Turobov Akbar Tolib o''g''li',       '2024-08-04' ),
+('Ashrapov Elyor Avazxonovich',        '2024-08-05' ),
 ('Axmedov Anzar Akmalovich',           '2024-07-04' ),
 ('Axmatov Shoxrux Shuxrat o‘g‘li',     '2024-07-05' ),
 ('Sultonov Xo‘jaahmad Idris o‘g‘li',   '2024-07-08' ),
@@ -20,7 +20,7 @@ INSERT INTO employees (ename, workday) VALUES
 ('Timur',                              '2024-07-25' ),
 ('Baxtiyorov Eldor Umidjon o‘g‘li',    '2024-07-26' ),
 ('Sayfiyev Javohir O‘tkirjon o‘g‘li',  '2024-07-29' ),
-('Tolibjon',                           '2024-06-27' ),
-('Hikmatillo (oper)',                  '2024-06-28' ),
-('Abdurahim Rahmonov',                 '2024-06-29' ),
-('Sadulloyev Shaxzod(oper)',           '2024-06-30' )
+('Tolibjon',                           '2024-07-30' ),
+('Hikmatillo (oper)',                  '2024-07-31' ),
+('Abdurahim Rahmonov',                 '2024-08-01' ),
+('Sadulloyev Shaxzod(oper)',           '2024-08-02' )

@@ -216,7 +216,7 @@ func (b *Bot) handleRestart() {
 		return
 	}
 
-	reminderMsg := fmt.Sprintf("Bugungi navbatchimiz: <b>%s</b> edi.", employee.Name)
+	reminderMsg := fmt.Sprintf("Bugungi navbatchimiz: <b>%s</b>.", employee.Name)
 	msg := tgbotapi.NewMessage(chatID, reminderMsg)
 	msg.ParseMode = "HTML"
 	_, err = b.bot.Send(msg)

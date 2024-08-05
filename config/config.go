@@ -33,9 +33,10 @@ func LoadConfig() (*Config, error) {
 		dbHost, dbPort, dbUser, dbPassword, dbName)
 
 	var tgToken string
-	if os.Getenv("ENVIRONMENT") == "dev" {
+	env := os.Getenv("ENVIRONMENT")
+	if env == "dev" {
 		tgToken = os.Getenv("TEST_TELEGRAM_BOT_TOKEN")
-	} else if os.Getenv("ENVIRONMENT") == "prod" {
+	} else if env == "prod" {
 		tgToken = os.Getenv("TELEGRAM_BOT_TOKEN")
 	}
 

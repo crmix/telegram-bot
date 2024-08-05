@@ -121,6 +121,7 @@ func (b *Bot) handleMessage(message *tgbotapi.Message) {
 		//	b.handleValidatePhoneCommand(message)
 		case "tags":
 			b.handleTagsCommand(message)
+
 		case "restart":
 			b.handleRestart()
 		case "prev":
@@ -208,12 +209,6 @@ func (b *Bot) handleRestart() {
 	if err != nil {
 		log.Printf("Failed to get groupId on restart tag %v", err)
 	}
-	introductionMsg := "Salom, men qayta ishga tushdim! Men navbatchilikni eslatib turuvchi botman. "
-	msg := tgbotapi.NewMessage(chatID, introductionMsg)
-	_, err = b.bot.Send(msg)
-	if err != nil {
-		log.Printf("Failed to send restart introduction message: %v", err)
-	}
 
 	employee, err := b.employeeService.GetAndUpdateDutyEmployee()
 	if err != nil {
@@ -222,7 +217,7 @@ func (b *Bot) handleRestart() {
 	}
 
 	reminderMsg := fmt.Sprintf("Bugungi navbatchimiz: <b>%s</b> edi.", employee.Name)
-	msg = tgbotapi.NewMessage(chatID, reminderMsg)
+	msg := tgbotapi.NewMessage(chatID, reminderMsg)
 	msg.ParseMode = "HTML"
 	_, err = b.bot.Send(msg)
 	if err != nil {

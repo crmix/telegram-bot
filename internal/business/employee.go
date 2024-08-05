@@ -42,7 +42,7 @@ func (s *EmployeeService) SendDailyDutyNotification(bot *tgbotapi.BotAPI) {
 
 	c := cron.New()
 
-	_, err := c.AddFunc("* 4 * * MON-FRI", func() {
+	_, err := c.AddFunc("5 4 * * MON-FRI", func() {
 		groupId, err := s.RetrievingGroupID()
 		if err != nil {
 			fmt.Printf("error during receiving groupid on api %v", err)

@@ -22,11 +22,11 @@ services:
     environment:
       ENVIRONMENT: prod
       LOG_LEVEL: debug
-      DB_HOST: database
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: learning020202
-      DB_NAME: navbatchi_bot
+      POSTGRES_HOST: database
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: learning020202
+      POSTGRES_DB: navbatchi_bot
       TELEGRAM_BOT_TOKEN: 7181421703:AAG3FmPqUgitSvbg8dwlUdGT8mbiMCRM1R8
       FarruxAkaId: 1399785585
       OtabekAkaId: 150225351

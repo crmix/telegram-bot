@@ -26,7 +26,7 @@ func (s *EmployeeService) GetNextEmployee() (string, error) {
 	return s.repo.GetNextDutyEmployee()
 }
 
-func (s *EmployeeService) GetPrevEmployee() (string, error){
+func (s *EmployeeService) GetPrevEmployee() (string, error) {
 	return s.repo.GetPreviousDutyEmployee()
 }
 
@@ -43,6 +43,7 @@ func (s *EmployeeService) SendDailyDutyNotification(bot *tgbotapi.BotAPI) {
 	c := cron.New()
 
 	_, err := c.AddFunc("5 4 * * MON-FRI", func() {
+		// fmt.Println("bot: ", bot)
 		groupId, err := s.RetrievingGroupID()
 		if err != nil {
 			fmt.Printf("error during receiving groupid on api %v", err)
@@ -103,8 +104,8 @@ func (s *EmployeeService) SendDailyDutyNotification(bot *tgbotapi.BotAPI) {
 	_, err = c.AddFunc("0 11 * * MON-FRI", func() {
 		groupId, err := s.RetrievingGroupID()
 		if err != nil {
-		  fmt.Printf("error during retrieving group ID: %v\n", err)
-		  return
+			fmt.Printf("error during retrieving group ID: %v\n", err)
+			return
 		}
 		resultsMsg := fmt.Sprintf(`<b>Hurmatli hamkasblar!</b>
 		<i>Oshxonamizni yillik muzeyga aylantirmaslik uchun, qolgan ovqatlar va idishlaringizni olib keting. Hidlari bilan san’at asariga aylantirish shart emas!</i>`)
@@ -112,15 +113,14 @@ func (s *EmployeeService) SendDailyDutyNotification(bot *tgbotapi.BotAPI) {
 		msg.ParseMode = "HTML"
 		_, err = bot.Send(msg)
 		if err != nil {
-		  log.Printf("Failed to send results message: %v", err)
+			log.Printf("Failed to send results message: %v", err)
 		}
-	  })
-	  if err != nil {
+	})
+	if err != nil {
 		log.Fatalf("Failed to add cron job: %v", err)
-	  }
+	}
 
 	c.Start()
 
 	select {}
 }
-

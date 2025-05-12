@@ -1,0 +1,45 @@
+version: '3.9'
+
+services:
+  database:
+    image: postgres:17
+    container_name: xozmag-database
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: learning020202
+      POSTGRES_DB: navbatchi_bot
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - bot-network
+
+  app:
+    build:
+      context: .
+    container_name: bot-backend
+    ports:
+      - "8080:8080"
+    environment:
+      ENVIRONMENT: prod
+      LOG_LEVEL: debug
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: learning020202
+      DB_NAME: navbatchi_bot
+      TELEGRAM_BOT_TOKEN: 7181421703:AAG3FmPqUgitSvbg8dwlUdGT8mbiMCRM1R8
+      FarruxAkaId: 1399785585
+      OtabekAkaId: 150225351
+      ElyorAkaId: 262843262
+    depends_on:
+      - database
+    networks:
+      - bot-network
+
+volumes:
+  postgres_data:
+  uploads:
+
+networks:
+  bot-network:
+    driver: bridge
